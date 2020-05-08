@@ -1,0 +1,23 @@
+{
+  "name": "React-Graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "node-pg-migrate"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "config": "^3.3.1",
+    "express": "^4.17.1",
+    "express-graphql": "^0.9.0",
+    "graphql": "^15.0.0",
+    "lodash": "^4.17.15",
+    "massive": "^6.4.0",
+    "node-pg-migrate": "^4.8.0",
+    "pg": "^8.0.3"
+  }
+}
