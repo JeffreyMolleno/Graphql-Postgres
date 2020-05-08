@@ -38,7 +38,9 @@ const AuthorType = new GraphQLObjectType({
     books: {
       type: new GraphQLList(BookType),
       async resolve(parent, args, request) {
-        let res = await request.app.get("db").books.where(`author_id=${parent.id}`);
+        let res = await request.app
+          .get("db")
+          .books.where(`author_id=${parent.id}`);
         return res;
       },
     },
@@ -82,9 +84,40 @@ const RootQuery = new GraphQLObjectType({
       },
     },
   },
-  
+});
+
+const Mutation = new GraphQLObjectType({
+  name: "Mutation",
+  fields: {
+    addAuthor: {
+      type: AuthorType,
+      args: { name: { type: GraphQLString }, age: { type: GraphQLInt } },
+      async resolve(parent, args, request) {
+        return await request.app.get("db").authors.insert({
+          name: args.name,
+          age: args.age,
+        });
+      },
+    },
+    addBook: {
+      type: BookType,
+      args: {
+        title: { type: GraphQLString },
+        genre: { type: GraphQLString },
+        author_id: { type: GraphQLID },
+      },
+      async resolve(parent, args, request) {
+        return await request.app.get("db").books.insert({
+          title: args.title,
+          genre: args.genre,
+          author_id: args.author_id,
+        });
+      },
+    },
+  },
 });
 
 module.exports = new GraphQLSchema({
   query: RootQuery,
+  mutation: Mutation,
 });
