@@ -8,6 +8,7 @@ const {
   GraphQLID,
   GraphQLInt,
   GraphQLList,
+  GraphQLNonNull,
 } = graphql; //destructuring
 
 // define expected structure of the object to retrieve/process
@@ -91,7 +92,10 @@ const Mutation = new GraphQLObjectType({
   fields: {
     addAuthor: {
       type: AuthorType,
-      args: { name: { type: GraphQLString }, age: { type: GraphQLInt } },
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        age: { type: new GraphQLNonNull(GraphQLInt) },
+      },
       async resolve(parent, args, request) {
         return await request.app.get("db").authors.insert({
           name: args.name,
@@ -102,9 +106,9 @@ const Mutation = new GraphQLObjectType({
     addBook: {
       type: BookType,
       args: {
-        title: { type: GraphQLString },
-        genre: { type: GraphQLString },
-        author_id: { type: GraphQLID },
+        title: { type: new GraphQLNonNull(GraphQLString) },
+        genre: { type: new GraphQLNonNull(GraphQLString) },
+        author_id: { type: new GraphQLNonNull(GraphQLID) },
       },
       async resolve(parent, args, request) {
         return await request.app.get("db").books.insert({

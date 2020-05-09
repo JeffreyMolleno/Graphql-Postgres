@@ -3,6 +3,7 @@ const graphqlHTTP = require("express-graphql");
 const schema = require("./schema/schema");
 const app = express();
 const massive = require("massive");
+const cors = require("cors");
 
 massive({
   host: "localhost",
@@ -11,9 +12,10 @@ massive({
   user: "postgres",
   password: "admin",
 }).then((db) => {
-
   app.set("db", db);
-  
+
+  app.use(cors());
+
   app.use(
     "/graphql",
     graphqlHTTP({
