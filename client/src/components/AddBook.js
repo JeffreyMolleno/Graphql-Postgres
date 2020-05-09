@@ -1,48 +1,85 @@
-import React from "react";
-import { gql } from "apollo-boost";
-import { useQuery } from "@apollo/react-hooks";
-
-const getAuthorsQuery = gql`
-  {
-    authors {
-      id
-      name
-    }
-  }
-`;
+import React, { useState } from "react";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { getAuthorsQuery, addBookMutation } from "./queries";
 
 export default function AddBook() {
   const { loading, error, data } = useQuery(getAuthorsQuery);
-
   return (
     <div>
-      <Form data={data}/>
+      <Form data={data} />
     </div>
   );
 }
 
-function Form({data}) {
+function Form({ data }) {
+  const [addBook, { loading, error, extract }] = useMutation(addBookMutation);
+
+  const [state, setState] = useState({
+    title: "",
+    genre: "",
+    author_id: "",
+  });
+
+  const Submit = (e) => {
+    e.preventDefault();
+
+    addBook({ variables:  state });
+
+    console.log(state);
+
+    // console.log(error, loading, extract);
+  };
+
   return (
-    <form id="add-book">
+    <form id="add-book" onSubmit={(e) => Submit(e)}>
       <div className="field">
         <label>Book Name:</label>
-        <input type="text" />
+        <input
+          type="text"
+          value={state.title}
+          onChange={(e) => {
+            const res = e.target.value;
+            setState((prevProps) => {
+              return { ...prevProps, title: res };
+            });
+          }}
+        />
       </div>
       <div className="field">
         <label>Genre:</label>
-        <input type="text" />
+        <input
+          type="text"
+          onChange={(e) => {
+            const res = e.target.value;
+            setState((prevProps) => {
+              return { ...prevProps, genre: res };
+            });
+          }}
+        />
       </div>
 
       <div className="field">
         <label>Author:</label>
-        <select>
+        <select
+          onChange={(e) => {
+            const res = e.target.value;
+            setState((prevProps) => {
+              return { ...prevProps, author_id: res };
+            });
+          }}
+        >
           <option>Select Author</option>
           {data &&
             data.authors.map((author) => {
-              return <option id={author.id}>{author.name}</option>;
+              return (
+                <option key={author.id} value={author.id}>
+                  {author.name}
+                </option>
+              );
             })}
         </select>
       </div>
+      <button>Submit</button>
     </form>
   );
 }
