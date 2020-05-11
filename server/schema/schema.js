@@ -19,12 +19,12 @@ const BookType = new GraphQLObjectType({
     title: { type: GraphQLString },
     genre: { type: GraphQLString },
     author: {
-      type: new GraphQLList(AuthorType),
+      type: AuthorType,
       async resolve(parent, args, request) {
         let res = await request.app
           .get("db")
           .authors.where(`id=${parent.author_id}`);
-        return res;
+        return res[0];
       },
     },
   }),

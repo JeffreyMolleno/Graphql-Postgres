@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery, useMutation } from "@apollo/react-hooks";
-import { getAuthorsQuery, addBookMutation } from "./queries";
+import { getAuthorsQuery, addBookMutation, getBooksQuery } from "./queries";
 
 export default function AddBook() {
   const { loading, error, data } = useQuery(getAuthorsQuery);
@@ -22,12 +22,7 @@ function Form({ data }) {
 
   const Submit = (e) => {
     e.preventDefault();
-
-    addBook({ variables:  state });
-
-    console.log(state);
-
-    // console.log(error, loading, extract);
+    addBook({ variables: state, refetchQueries: [{ query: getBooksQuery }] });
   };
 
   return (
